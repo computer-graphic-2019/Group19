@@ -82,13 +82,13 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 
 	// skybox module
 	SkyBox skybox;
 
     // build and compile shaders
     // -------------------------
-	//ResM.loadShader("model", "./ShaderCode/1.model_loading.vs", "./ShaderCode/1.model_loading.fs");
 	ResM.loadShader("model", "./ShaderCode/3.phong_shading.vs", "./ShaderCode/3.phong_shading.fs");
 	ResM.loadShader("explodeModel", "./ShaderCode/4.explode_shading.vs", "./ShaderCode/4.explode_shading.fs", "./ShaderCode/4.explode_shading.gs");
 	ResM.loadShader("textShader", "./ShaderCode/5.text_loading.vs", "./ShaderCode/5.text_loading.fs");
@@ -102,8 +102,8 @@ int main()
 	ResM.loadModel("explodeTarget", "./models/explodeTarget/explodeTarget.obj");
 
 	// target position
-	targetList.insert(std::pair<std::string, GameObject>("target", GameObject(glm::vec3(-0.3f, 0.1f, 20.0f), glm::vec3(0.8f,1.0f,2.0f))));
-	explodeTargeList.insert(std::pair<std::string, GameObject>("explodeTarget1", GameObject(glm::vec3(1.5f, 0.1f, 20.0f), glm::vec3(0.8f, 1.0f, 2.0f))));
+	targetList.insert(std::pair<std::string, GameObject>("target", GameObject(glm::vec3(-0.3f, 0.1f, -20.0f), glm::vec3(0.8f,1.0f,2.0f))));
+	explodeTargeList.insert(std::pair<std::string, GameObject>("explodeTarget1", GameObject(glm::vec3(1.2f, 0.2f, -20.0f), glm::vec3(0.4f, 0.7f, 1.0f))));
 	explodeTargeRec.insert(std::pair<std::string, bool>("explodeTarget1", false));
 
     // draw in wireframe
