@@ -42,7 +42,8 @@ public:
 		// »æÖÆÌì¿ÕºÐ
 		Shader *shader = ResM.getShader("skybox");
 		shader->use();
-		glm::mat4 view = glm::mat4(glm::mat3(moveController.getHumanCamera()->getView()));
+		glm::mat4 size = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(glm::mat3(moveController.getHumanCamera()->getView())) * glm::scale(size, glm::vec3(2.0f));
 		glm::mat4 projection = glm::perspective(glm::radians(moveController.getHumanCamera()->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 		shader->setMat4("view", view);
 		shader->setMat4("projection", projection);
