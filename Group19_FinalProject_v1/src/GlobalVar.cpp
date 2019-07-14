@@ -8,13 +8,20 @@
 #include <deque>
 
 // settings
-unsigned int SCR_WIDTH = 1280;
-unsigned int SCR_HEIGHT = 960;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 
 // camera
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+
+// scene
+bool MenuScene = true;
+
+// cursor position
+float cursorPos_x = 0.0f;
+float cursorPos_y = 0.0f;
 
 // Movement
 bool gunRaiseUp = false;
@@ -59,20 +66,29 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-	if (firstMouse) {
+	if (MenuScene) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		cursorPos_x = xpos;
+		cursorPos_y = ypos;
+	}
+	else {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		if (firstMouse) {
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
 		lastX = xpos;
 		lastY = ypos;
-		firstMouse = false;
+
+		// camera view move horizon 
+		moveController.humanRotate(xoffset, yoffset);
 	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	// camera view move horizon 
-	moveController.humanRotate(xoffset, yoffset);
+	
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -84,15 +100,22 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void processMouseClick(GLFWwindow* window, int button, int action, int mods) {
-	if (button == GLFW_MOUSE_BUTTON_LEFT) {
-		if (action == GLFW_PRESS) {
-			// Éä»÷
-			shootController.Fire();
+	if (MenuScene) {
+		if (cursorPos_x >= 550 && cursorPos_x <= 750 && cursorPos_y >= 590 && cursorPos_y <= 660) {
+			MenuScene = false;
 		}
 	}
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-		if (action == GLFW_PRESS) {
-			gunRaiseUp = !gunRaiseUp;
+	else {
+		if (button == GLFW_MOUSE_BUTTON_LEFT) {
+			if (action == GLFW_PRESS) {
+				// Éä»÷
+				shootController.Fire();
+			}
+		}
+		else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+			if (action == GLFW_PRESS) {
+				gunRaiseUp = !gunRaiseUp;
+			}
 		}
 	}
 }

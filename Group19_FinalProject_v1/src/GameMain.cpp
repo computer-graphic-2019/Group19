@@ -24,6 +24,9 @@ extern GameShoot shootController;
 extern PhysicsEngine physicsEngine;
 extern float deltaTime, lastFrame;
 extern bool gunRaiseUp;
+extern bool MenuScene;
+extern float cursorPos_x;
+extern float cursorPos_y;
 
 extern std::map<std::string, GameObject> targetList;
 extern std::map<std::string, GameObject> movingTargetList;
@@ -70,7 +73,7 @@ int main()
 	glfwSetMouseButtonCallback(window, processMouseClick);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -127,7 +130,9 @@ int main()
 		// initialize 
 		float time = currentFrame / 30;
 		glm::vec3 lightPos(200 * cos(time), 200 * sin(time), 1.0);
-
+		if (MenuScene) {
+			lightPos = glm::vec3(200, 200, 1.0f);
+		}
 		// update
 		director.fireParticle.Update(deltaTime, glm::vec3(-23.0f, 25.0f, 0.0f), glm::vec3(0.0f,1.0f,0.0f), 20);
 		// render skybox
@@ -137,12 +142,25 @@ int main()
 		director.RenderScene(lightPos);
 		//director.testMap(window);
 		
-		// raise up gun
-		moveController.gunMove(gunRaiseUp);
+		if (MenuScene) {
+			shootController.showScore("Shooting Game", 300.0f, 700.0f, 2.0f, glm::vec3(1.0f));
+			glm::vec3 color(1.0f);
+			if (cursorPos_x >= 550 && cursorPos_x <= 750 && cursorPos_y >= 590 && cursorPos_y <= 660) {
+				color = glm::vec3(1.0f, 1.0f, 0.0f);
+			}
+			else {
+				color = glm::vec3(1.0f, 0.0f, 0.0f);
+			}
+			shootController.showScore("Start", 550.0f, 300.0f, 2.0f, color);
+		}
+		else {
+			// raise up gun
+			moveController.gunMove(gunRaiseUp);
 
-		// show bullet
-		shootController.showBullet(deltaTime);
-		shootController.CheckCollisionWithTarget();
+			// show bullet
+			shootController.showBullet(deltaTime);
+			shootController.CheckCollisionWithTarget();
+		}
 		
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

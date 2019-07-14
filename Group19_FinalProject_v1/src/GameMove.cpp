@@ -1,6 +1,7 @@
 #include "GameMove.h"
 
 extern unsigned int SCR_WIDTH, SCR_HEIGHT;
+extern bool MenuScene;
 extern ResourceManager ResM;
 extern GameMove moveController;
 extern PhysicsEngine physicsEngine;
@@ -95,7 +96,7 @@ void GameMove::raiseUpGun() {
 void GameMove::putDownGun() {
 	// 场景缩小
 	moveController.getHumanCamera()->setZoom(45.0f);
-	moveController.getHumanCamera()->setSpeed(10.0f, 0.2f);
+	moveController.getHumanCamera()->setSpeed(10.0f, 0.5f);
 	// 绘制枪
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 model = glm::mat4(1.0f);
@@ -115,6 +116,7 @@ void GameMove::putDownGun() {
 
 // 枪械动作总控制
 void GameMove::gunMove(bool signal) {
+	if (MenuScene) return;
 	this->isGunRaiseUp = signal;
 	if (this->isGunRaiseUp) {
 		this->raiseUpGun(); 

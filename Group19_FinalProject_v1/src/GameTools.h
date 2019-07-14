@@ -20,6 +20,8 @@
 #include <vector>
 
 extern unsigned int SCR_WIDTH, SCR_HEIGHT;
+extern bool MenuScene;
+
 extern ResourceManager ResM;
 extern GameMove moveController;
 extern PhysicsEngine physicsEngine;
@@ -181,14 +183,14 @@ public:
 			name += ('0' + i);
 			if (i < numOfTarget) {
 				glm::vec3 pos(48.0f, 6.0f, -60.0f + 8 * (i + 1));
-				glm::vec3 size(1.0f, 2.2f, 2.2f);
+				glm::vec3 size(0.5f, 2.2f, 2.2f);
 				GameObject go(pos - size, size * 2.0f);
 				targetList.insert_or_assign(name, go);
 				physicsEngine.setSceneInnerBoundary(pos - size, pos + size);
 			}
 			else {
 				glm::vec3 pos(48.0f, 6.0f, 60.0f - 8 * ((i - numOfTarget) + 1));
-				glm::vec3 size(1.0f, 2.2f, 2.2f);
+				glm::vec3 size(0.5f, 2.2f, 2.2f);
 				GameObject go(pos - size, size * 2.0f);
 				targetList.insert_or_assign(name, go);
 				physicsEngine.setSceneInnerBoundary(pos - size, pos + size);
@@ -383,8 +385,18 @@ public:
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glCullFace(GL_BACK);
 		// 参数
-		glm::vec3 viewPos = moveController.getHumanCamera()->getPosition();
-		glm::mat4 view = moveController.getHumanCamera()->getView();
+		glm::vec3 viewPos = glm::vec3(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		if (MenuScene) {
+			float angle = (float)glfwGetTime() * 0.5f;
+			viewPos = glm::vec3(150.0f * sin(angle), 60.0f, 150.0f * cos(angle));
+			view = glm::lookAt(viewPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		else {
+			viewPos = moveController.getHumanCamera()->getPosition();
+			view = moveController.getHumanCamera()->getView();
+		}
+		
 		glm::mat4 projection = glm::perspective(glm::radians(moveController.getHumanCamera()->getZoom()),
 			(float)SCR_WIDTH / (float)SCR_HEIGHT,
 			0.1f, 3000.0f);

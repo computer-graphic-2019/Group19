@@ -5,7 +5,7 @@ extern GameMove moveController;
 extern bool firstTimeShowBullet;
 extern unsigned int SCR_WIDTH, SCR_HEIGHT;
 extern bool gunRaiseUp;
-extern unsigned int SCR_WIDTH, SCR_HEIGHT;
+extern bool MenuScene;
 
 extern std::map<std::string, GameObject> targetList;
 extern std::map<std::string, GameObject> movingTargetList;
@@ -47,7 +47,8 @@ void GameShoot::Shoot() {
 }
 
 void GameShoot::showBullet(float deltaTime) {
-	const float bulletSpeedRate = 2.0f;
+	if (MenuScene) return;
+	const float bulletSpeedRate = 3.0f;
 
 	Shoot();
 
@@ -79,6 +80,7 @@ void GameShoot::showBullet(float deltaTime) {
 
 // 检查命中位置
 void GameShoot::CheckCollisionWithTarget() {
+	if (MenuScene) return;
 	for (int i = 0; i < this->bulletList.size(); i++) {
 		// 固定靶子
 		if (!this->bulletList[i].isHit) {

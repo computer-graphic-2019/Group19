@@ -16,6 +16,7 @@
 extern unsigned int SCR_WIDTH, SCR_HEIGHT;
 extern ResourceManager ResM;
 extern GameMove moveController;
+extern bool MenuScene;
 
 class SkyBox {
 public:
@@ -47,7 +48,12 @@ public:
 		glm::mat4 projection = glm::perspective(glm::radians(moveController.getHumanCamera()->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 		shader->setMat4("view", view);
 		shader->setMat4("projection", projection);
-		shader->setFloat("time", sin(time));
+		if (MenuScene) {
+			shader->setFloat("time", 0.8f);
+		}
+		else {
+			shader->setFloat("time", sin(time));
+		}
 
 		glBindVertexArray(VAO);
 		{
